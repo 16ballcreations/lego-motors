@@ -1,0 +1,66 @@
+[
+  {
+    "archivo": "r1200gs.webp",
+    "moto": "BMW R 1200 GS",
+    "autor": "Diego Delso",
+    "licencia": "CC BY-SA 4.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:BMW_R1200GS_in_Munich.jpg"
+  },
+  {
+    "archivo": "r1250gsa.webp",
+    "moto": "BMW R 1250 GS Adventure",
+    "autor": "Klaas van Buiten",
+    "licencia": "CC BY-SA 4.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:BMW_R1250.jpg"
+  },
+  {
+    "archivo": "ktm1290.webp",
+    "moto": "KTM 1190 Adventure R",
+    "autor": "Cjp24",
+    "licencia": "CC BY-SA 4.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:KTM_1190_Adventure_R_-_right_view.jpg"
+  },
+  {
+    "archivo": "tiger900.webp",
+    "moto": "Triumph Tiger 800",
+    "autor": "H005",
+    "licencia": "CC0",
+    "licenciaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "fuente": "https://commons.wikimedia.org/wiki/File:Triumph_Tiger_800_MY_2012_side_view.jpg"
+  },
+  {
+    "archivo": "multistrada.webp",
+    "moto": "Ducati Multistrada 1200",
+    "autor": "Keith",
+    "licencia": "CC BY-SA 2.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:Ducati_multistrada_1200_ABS.jpg"
+  },
+  {
+    "archivo": "africatwin.webp",
+    "moto": "Honda CRF1000L Africa Twin Adventure Sports",
+    "autor": "Atirador",
+    "licencia": "CC BY-SA 4.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:Honda_.CFR_1000L.jpg"
+  },
+  {
+    "archivo": "tenere700.webp",
+    "moto": "Yamaha Ténéré 700",
+    "autor": "APneunzehn74",
+    "licencia": "CC0",
+    "licenciaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "fuente": "https://commons.wikimedia.org/wiki/File:T%C3%A9n%C3%A9r%C3%A9_700_(1).jpg"
+  },
+  {
+    "archivo": "rninet.webp",
+    "moto": "BMW R nineT",
+    "autor": "George E. Koronaios",
+    "licencia": "CC BY-SA 4.0",
+    "licenciaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "fuente": "https://commons.wikimedia.org/wiki/File:BMW_R_nine_T_in_Athens_on_10-28-2023.jpg"
+  }
+]

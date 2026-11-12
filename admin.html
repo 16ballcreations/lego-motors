@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Taller · LEGO Motors</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="media/marca/isotipo-naranja.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="isotipo" viewBox="0 0 64 80">
+    <g transform="skewX(-16) translate(22 0)" fill="currentColor">
+      <rect x="22" y="0"  width="16" height="16" rx="1"/>
+      <rect x="4"  y="16" width="18" height="18" rx="1"/>
+      <rect x="22" y="34" width="18" height="18" rx="1"/>
+      <rect x="2"  y="52" width="20" height="24" rx="1"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="aviso-demo" role="note">Backoffice de demostración · los datos se guardan solo en este navegador · <button type="button" id="restablecer" class="aviso-demo__boton">Restablecer datos de ejemplo</button></div>
+
+<header class="ad-barra">
+  <a class="ad-marca" href="admin.html">
+    <svg class="isotipo" viewBox="0 0 64 80" aria-hidden="true"><use href="#isotipo"/></svg>
+    <span>Taller</span>
+  </a>
+  <nav class="ad-pestanas" aria-label="Secciones del backoffice">
+    <a href="#agenda" data-vista="agenda">Agenda</a>
+    <a href="#motos" data-vista="motos">Motos en venta</a>
+  </nav>
+  <a class="ad-web" href="index.html" target="_blank" rel="noopener">Ver la web ↗</a>
+</header>
+
+<main class="ad-main">
+
+  <!-- ============ AGENDA ============ -->
+  <section class="ad-vista" id="vista-agenda" aria-labelledby="t-agenda">
+    <div class="ad-cabeza">
+      <div>
+        <h1 id="t-agenda">Agenda del taller</h1>
+        <p class="ad-resumen" id="resumen-agenda"></p>
+      </div>
+      <button type="button" class="boton" id="nueva-cita">+ Nueva cita</button>
+    </div>
+
+    <div class="ad-herramientas">
+      <div class="ad-nav-fecha">
+        <button type="button" class="ad-icono" id="cal-antes" aria-label="Anterior">←</button>
+        <button type="button" class="ad-chip" id="cal-hoy">Hoy</button>
+        <button type="button" class="ad-icono" id="cal-despues" aria-label="Siguiente">→</button>
+        <h2 class="ad-rango" id="cal-rango"></h2>
+      </div>
+      <div class="ad-segmento" role="group" aria-label="Vista del calendario">
+        <button type="button" data-modo="semana" class="activo">Semana</button>
+        <button type="button" data-modo="mes">Mes</button>
+      </div>
+    </div>
+
+    <div class="ad-leyenda" id="leyenda"></div>
+    <div class="cal" id="calendario"></div>
+  </section>
+
+  <!-- ============ MOTOS ============ -->
+  <section class="ad-vista" id="vista-motos" aria-labelledby="t-motos" hidden>
+    <div class="ad-cabeza">
+      <div>
+        <h1 id="t-motos">Motos en venta</h1>
+        <p class="ad-resumen" id="resumen-motos"></p>
+      </div>
+      <button type="button" class="boton" id="nueva-moto">+ Cargar moto</button>
+    </div>
+    <div class="ad-herramientas">
+      <div class="ad-segmento" role="group" aria-label="Filtrar por estado" id="filtro-estado">
+        <button type="button" data-estado="" class="activo">Todas</button>
+        <button type="button" data-estado="publicada">Publicadas</button>
+        <button type="button" data-estado="reservada">Reservadas</button>
+        <button type="button" data-estado="vendida">Vendidas</button>
+        <button type="button" data-estado="borrador">Borradores</button>
+      </div>
+      <label class="ad-buscar"><span class="oculto">Buscar</span><input type="search" id="buscar-moto" placeholder="Buscar marca o modelo"></label>
+    </div>
+    <div class="ad-motos" id="lista-motos"></div>
+  </section>
+</main>
+
+<!-- panel lateral: cita -->
+<dialog class="ad-panel" id="panel-cita" aria-labelledby="pc-titulo">
+  <form method="dialog" class="ad-form" id="form-cita" novalidate>
+    <div class="ad-panel__cabeza">
+      <h2 id="pc-titulo">Cita</h2>
+      <button type="button" class="ad-icono" data-cerrar aria-label="Cerrar">×</button>
+    </div>
+    <div class="ad-panel__cuerpo">
+      <div class="ad-estados" id="pc-estados" role="radiogroup" aria-label="Estado de la cita"></div>
+      <div class="ad-fila">
+        <label class="campo"><span>Día</span><input type="date" name="fecha" required></label>
+        <label class="campo"><span>Hora de llegada</span><select name="hora"></select></label>
+      </div>
+      <label class="campo"><span>Servicio</span><select name="servicio"></select></label>
+      <div class="ad-fila">
+        <label class="campo"><span>Moto</span><input name="moto" placeholder="BMW R 1200 GS 2016" required></label>
+        <label class="campo campo--corto"><span>Km</span><input name="km" inputmode="numeric" placeholder="38.500"></label>
+      </div>
+      <div class="ad-fila">
+        <label class="campo"><span>Cliente</span><input name="nombre" required></label>
+        <label class="campo"><span>WhatsApp</span><input name="tel" inputmode="tel" required></label>
+      </div>
+      <label class="campo"><span>Nota</span><textarea name="nota" rows="2"></textarea></label>
+      <label class="check"><input type="checkbox" name="recoger"><span>Recoger la moto en casa</span></label>
+      <p class="ad-origen" id="pc-origen"></p>
+      <p class="agenda__error" id="pc-error" role="alert"></p>
+    </div>
+    <div class="ad-panel__pie">
+      <button type="button" class="boton boton--fantasma ad-peligro" id="pc-borrar">Borrar</button>
+      <a class="boton boton--fantasma" id="pc-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+      <button type="submit" class="boton" id="pc-guardar">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- panel lateral: moto -->
+<dialog class="ad-panel" id="panel-moto" aria-labelledby="pm-titulo">
+  <form method="dialog" class="ad-form" id="form-moto" novalidate>
+    <div class="ad-panel__cabeza">
+      <h2 id="pm-titulo">Moto</h2>
+      <button type="button" class="ad-icono" data-cerrar aria-label="Cerrar">×</button>
+    </div>
+    <div class="ad-panel__cuerpo">
+      <label class="ad-foto" id="pm-foto">
+        <input type="file" accept="image/*" name="archivo" class="oculto">
+        <img alt="" id="pm-foto-img" hidden>
+        <span class="ad-foto__vacio" id="pm-foto-vacio"><b>Subir foto</b><small>Toca o arrastra una imagen · se reduce a 1200 px</small></span>
+      </label>
+      <div class="ad-fila">
+        <label class="campo"><span>Marca</span><input name="marca" required list="lista-marcas"></label>
+        <label class="campo"><span>Modelo</span><input name="modelo" required></label>
+      </div>
+      <datalist id="lista-marcas"><option>BMW</option><option>KTM</option><option>Ducati</option><option>Triumph</option><option>Honda</option><option>Yamaha</option><option>Kawasaki</option><option>Suzuki</option><option>Harley-Davidson</option></datalist>
+      <div class="ad-fila ad-fila--4">
+        <label class="campo"><span>Año</span><input name="anio" inputmode="numeric" maxlength="4" required></label>
+        <label class="campo"><span>Km</span><input name="km" inputmode="numeric" required></label>
+        <label class="campo"><span>Cilindraje (cc)</span><input name="cc" inputmode="numeric"></label>
+        <label class="campo"><span>Potencia (hp)</span><input name="hp" inputmode="numeric"></label>
+      </div>
+      <div class="ad-fila ad-fila--3">
+        <label class="campo"><span>Precio (millones)</span><input name="precio" inputmode="decimal" required placeholder="62"></label>
+        <label class="campo"><span>Estilo</span><select name="estilo"><option>Aventura</option><option>Trail</option><option>Naked</option></select></label>
+        <label class="campo"><span>Historial</span><select name="dueno"><option>Único dueño</option><option>Segundo dueño</option><option>Tercer dueño</option></select></label>
+      </div>
+      <label class="campo"><span>Lo que le hicimos en el taller <small>(una cosa por línea)</small></span><textarea name="revision" rows="4" placeholder="Revisión de los 40.000 km&#10;Llantas nuevas"></textarea></label>
+      <div class="ad-estados" id="pm-estados" role="radiogroup" aria-label="Estado de la moto"></div>
+      <p class="agenda__error" id="pm-error" role="alert"></p>
+    </div>
+    <div class="ad-panel__pie">
+      <button type="button" class="boton boton--fantasma ad-peligro" id="pm-borrar">Borrar</button>
+      <button type="submit" class="boton">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="ad-aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" fill="#ffffff">
+  <!-- Isotipo LEGO Motors: la bandera a cuadros inclinada, recreada para la propuesta.
+       Va siempre solo: nunca pegado al logotipo. -->
+  <g transform="skewX(-16) translate(22 0)">
+    <rect x="22" y="0"  width="16" height="16" rx="1"/>
+    <rect x="4"  y="16" width="18" height="18" rx="1"/>
+    <rect x="22" y="34" width="18" height="18" rx="1"/>
+    <rect x="2"  y="52" width="20" height="24" rx="1"/>
+  </g>
+</svg>
