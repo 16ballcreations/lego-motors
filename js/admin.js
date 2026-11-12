@@ -33,6 +33,7 @@ const COLORES = {
   'Mecánica y reparación': '#c86bff', 'Suspensión y frenos': '#3fd0a6', 'Revisión de viaje': '#ff6f91', 'Ver moto en venta': '#e8e6e1',
 };
 const colorDe = s => COLORES[s] || '#9a9a9f';
+const serviciosDe = c => c.servicios?.length ? c.servicios : [c.servicio];
 const H0 = 8, H1 = 18; // el calendario va de 8:00 a 18:00
 let modo = 'semana';
 let ancla = hoy();          // día de referencia de la vista
@@ -91,7 +92,7 @@ function pintarSemana() {
     for (const c of delDia) {
       const alto = Math.min(c.horas, H1 - c.hora) * fila - 4;
       const ancho = 100 / carriles;
-      html += `<button type="button" class="cita ${c.estado}${c.id === recienCreada ? ' nueva' : ''}" data-id="${esc(c.id)}" style="--c:${colorDe(c.servicio)};top:${(c.hora - H0) * fila + 2}px;height:${alto}px;left:calc(${c._carril * ancho}% + 3px);width:calc(${ancho}% - 6px)">
+      html += `<button type="button" class="cita ${c.estado}${c.id === recienCreada ? ' nueva' : ''}" data-id="${esc(c.id)}" style="--c:${colorDe(serviciosDe(c)[0])};top:${(c.hora - H0) * fila + 2}px;height:${alto}px;left:calc(${c._carril * ancho}% + 3px);width:calc(${ancho}% - 6px)">
         <b>${c.hora}:00 · ${esc(c.nombre)}</b><span>${esc(c.servicio)}</span><span>${esc(c.moto)}</span>
         ${alto > 80 ? `<span class="cita__estado">${ESTADOS_CITA[c.estado]}${c.origen === 'web' ? ' · web' : ''}</span>` : ''}</button>`;
     }
@@ -120,7 +121,7 @@ function pintarMes() {
     const activas = delDia.filter(c => c.estado !== 'cancelada').length;
     html += `<button type="button" class="cal-mes__dia${d.getMonth() !== primero.getMonth() ? ' fuera' : ''}${d.getTime() === hoy().getTime() ? ' hoy' : ''}" data-dia="${iso(d)}"${activas ? ` data-n="${activas}"` : ''}>
       <span class="cal-mes__num">${d.getDate()}</span>
-      ${delDia.slice(0, 3).map(c => `<span class="cal-mes__pild ${c.estado}" style="--c:${colorDe(c.servicio)}">${c.hora}:00 ${esc(c.nombre.split(' ')[0])}</span>`).join('')}
+      ${delDia.slice(0, 3).map(c => `<span class="cal-mes__pild ${c.estado}" style="--c:${colorDe(serviciosDe(c)[0])}">${c.hora}:00 ${esc(c.nombre.split(' ')[0])}</span>`).join('')}
       ${delDia.length > 3 ? `<span class="cal-mes__mas">+${delDia.length - 3} más</span>` : ''}</button>`;
   }
   $('calendario').innerHTML = html + '</div>';
@@ -152,7 +153,7 @@ $('nueva-cita').addEventListener('click', () => {
 // ---------- panel de la cita ----------
 const panelCita = $('panel-cita'), formCita = $('form-cita');
 let citaActual = null, estadoCita = 'confirmada';
-formCita.servicio.innerHTML = SERVICIOS.map(s => `<option>${s.nombre}</option>`).join('');
+$('pc-servicios').innerHTML = SERVICIOS.map(s => `<label class="ad-servicio" style="--c:${colorDe(s.nombre)}"><input type="checkbox" name="servicios" value="${s.nombre}"><span>${s.nombre}</span></label>`).join('');
 formCita.hora.innerHTML = HORAS_TALLER.semana.map(h => `<option value="${h}">${h}:00</option>`).join('');
 
 function pintarEstadosCita() {
@@ -167,7 +168,8 @@ function abrirCita(c, fecha, hora) {
   $('pc-titulo').textContent = c ? `Cita de ${c.nombre.split(' ')[0]}` : 'Nueva cita';
   formCita.fecha.value = c ? c.fecha : fecha;
   formCita.hora.value = String(c ? c.hora : hora);
-  formCita.servicio.value = c ? c.servicio : SERVICIOS[0].nombre;
+  const elegidos = c ? serviciosDe(c) : [SERVICIOS[0].nombre];
+  formCita.querySelectorAll('[name="servicios"]').forEach(i => (i.checked = elegidos.includes(i.value)));
   for (const k of ['moto', 'km', 'nombre', 'tel', 'nota']) formCita[k].value = c ? c[k] || '' : '';
   formCita.recoger.checked = !!c?.recoger;
   estadoCita = c ? c.estado : 'confirmada';
@@ -193,10 +195,12 @@ formCita.addEventListener('submit', e => {
   if (!formCita.moto.value.trim()) return falla('Escribe la moto.');
   if (!formCita.nombre.value.trim()) return falla('Escribe el nombre del cliente.');
   if (estadoCita !== 'cancelada' && turnoOcupado(deIso(fecha), hora, citaActual?.id)) return falla(`Ya hay una moto llegando a las ${hora}:00 ese día.`);
-  const servicio = formCita.servicio.value;
+  const servicios = [...formCita.querySelectorAll('[name="servicios"]:checked')].map(i => i.value);
+  if (!servicios.length) return falla('Elige al menos un servicio.');
+  const servicio = servicios.join(', ');
   const cita = {
     ...(citaActual || { id: nuevoId('taller'), origen: 'taller', creada: new Date().toISOString() }),
-    fecha, hora, servicio, horas: citaActual?.servicio === servicio ? citaActual.horas : horasDe(servicio),
+    fecha, hora, servicios, servicio, horas: citaActual?.servicio === servicio ? citaActual.horas : Math.max(...servicios.map(horasDe)),
     moto: formCita.moto.value.trim(), km: formCita.km.value.trim(), nombre: formCita.nombre.value.trim(),
     tel: formCita.tel.value.trim(), nota: formCita.nota.value.trim(), recoger: formCita.recoger.checked, estado: estadoCita,
   };

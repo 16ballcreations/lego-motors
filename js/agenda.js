@@ -7,7 +7,6 @@ const marcas = [...form.querySelectorAll('.agenda__pasos li')];
 const btnSig = document.getElementById('siguiente');
 const btnAtras = document.getElementById('atras');
 const error = document.getElementById('agenda-error');
-const toca = document.getElementById('toca');
 const confirmado = document.getElementById('confirmado');
 let paso = 1;
 
@@ -18,20 +17,18 @@ const numero = s => Number(String(s || '').replace(/\D/g, '')) || 0;
 // miles con punto mientras se escribe
 form.querySelectorAll('[data-miles]').forEach(inp => inp.addEventListener('input', () => {
   const n = numero(inp.value); inp.value = n ? fmtMiles(n) : '';
-  calcularToca();
 }));
 
-// ¿cuándo le toca? Intervalo de 10.000 km (el de los bóxer refrigerados por agua)
-function calcularToca() {
-  const km = numero(form.km.value), ult = numero(form.kmUltima.value);
-  if (!km) { toca.hidden = true; return; }
-  const proxima = Math.ceil((km + 1) / 10000) * 10000;
-  const falta = proxima - km;
-  let txt = `Tu próxima revisión es la de los <b>${fmtMiles(proxima)} km</b>: le faltan ${fmtMiles(falta)} km.`;
-  if (ult && km - ult >= 10000) txt = `Llevas <b>${fmtMiles(km - ult)} km</b> desde la última revisión: ya te pasaste del intervalo de 10.000 km. Te sugerimos la revisión por kilometraje.`;
-  else if (falta <= 1500) txt += ' Es buen momento para agendarla.';
-  if (proxima % 20000 === 0) txt += ' En esta revisión también toca <b>ajuste de válvulas y bujías</b>.';
-  toca.innerHTML = txt; toca.hidden = false;
+// servicios elegidos (se puede marcar más de uno)
+const serviciosElegidos = () => [...form.querySelectorAll('input[name="servicio"]:checked')].map(i => i.value);
+
+// al cambiar de paso, solo se mueve la página si el inicio del formulario quedó fuera de la vista
+function mostrarFormulario() {
+  const barra = document.getElementById('barra')?.offsetHeight || 70;
+  const r = form.getBoundingClientRect();
+  if (r.top < barra + 8 || r.top > innerHeight * 0.6) {
+    scrollTo({ top: r.top + scrollY - barra - 16, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
 }
 
 // ---------- calendario ----------
@@ -92,7 +89,7 @@ function validar() {
     if (!form.marca.value) return falla(form.marca, 'Elige la marca de tu moto.');
     if (!form.modelo.value.trim()) return falla(form.modelo, 'Escribe el modelo.');
   }
-  if (paso === 2 && !form.servicio.value) { error.textContent = 'Elige un servicio.'; return false; }
+  if (paso === 2 && !serviciosElegidos().length) { error.textContent = 'Elige al menos un servicio.'; return false; }
   if (paso === 3 && (!diaSel || horaSel == null)) { error.textContent = 'Elige el día y la hora.'; return false; }
   if (paso === 4) {
     if (!form.nombre.value.trim()) return falla(form.nombre, 'Escribe tu nombre.');
@@ -113,7 +110,7 @@ const fechaLarga = () => diaSel.toLocaleDateString('es-CO', { weekday: 'long', d
 function datos() {
   return {
     moto: `${form.marca.value} ${form.modelo.value.trim()}${form.anio.value ? ' ' + form.anio.value : ''}`,
-    km: form.km.value, servicio: form.servicio.value, nota: form.nota.value.trim(),
+    km: form.km.value, servicios: serviciosElegidos(), servicio: serviciosElegidos().join(', '), nota: form.nota.value.trim(),
     cuando: `${fechaLarga()} a las ${horaSel}:00`, nombre: form.nombre.value.trim(), tel: form.tel.value.trim(),
     recoger: form.recoger.checked,
   };
@@ -122,22 +119,22 @@ function pintarResumen() {
   const d = datos();
   document.getElementById('resumen').innerHTML = `<dl>
     <dt>Moto</dt><dd>${esc(d.moto)}${d.km ? ` · ${esc(d.km)} km` : ''}</dd>
-    <dt>Servicio</dt><dd>${esc(d.servicio)}</dd>
+    <dt>${d.servicios.length > 1 ? 'Servicios' : 'Servicio'}</dt><dd>${esc(d.servicio)}</dd>
     <dt>Llegada</dt><dd>${esc(d.cuando)}</dd></dl>`;
 }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 btnSig.addEventListener('click', () => {
   if (!validar()) return;
-  if (paso < 4) { ir(paso + 1); form.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+  if (paso < 4) { ir(paso + 1); mostrarFormulario(); return; }
   confirmar();
 });
-btnAtras.addEventListener('click', () => ir(Math.max(1, paso - 1)));
+btnAtras.addEventListener('click', () => { ir(Math.max(1, paso - 1)); mostrarFormulario(); });
 
 function confirmar() {
   const d = datos();
   guardarCita({
-    id: nuevoId('web'), fecha: iso(diaSel), hora: horaSel, horas: horasDe(d.servicio), servicio: d.servicio,
+    id: nuevoId('web'), fecha: iso(diaSel), hora: horaSel, horas: Math.max(...d.servicios.map(horasDe)), servicios: d.servicios, servicio: d.servicio,
     moto: d.moto, km: d.km, nombre: d.nombre, tel: d.tel, nota: d.nota, recoger: d.recoger,
     origen: 'web', estado: 'pendiente', creada: new Date().toISOString(),
   });
@@ -146,14 +143,16 @@ function confirmar() {
 `Nueva cita desde la web 🏁
 Cliente: ${d.nombre} · ${d.tel}
 Moto: ${d.moto}${d.km ? ` · ${d.km} km` : ''}
-Servicio: ${d.servicio}
+${d.servicios.length > 1 ? 'Servicios' : 'Servicio'}: ${d.servicio}
 Llega: ${d.cuando}${d.recoger ? '\nPide recogida en casa' : ''}${d.nota ? `\nNota: ${d.nota}` : ''}`;
   form.hidden = true; confirmado.hidden = false;
-  confirmado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const barra = document.getElementById('barra')?.offsetHeight || 70;
+  const top = confirmado.getBoundingClientRect().top;
+  if (top < barra + 8 || top > innerHeight * 0.6) scrollTo({ top: top + scrollY - barra - 16, behavior: 'smooth' });
 }
 
 document.getElementById('otra').addEventListener('click', () => {
-  form.reset(); diaSel = null; horaSel = null; semana = 0; toca.hidden = true;
+  form.reset(); diaSel = null; horaSel = null; semana = 0;
   document.getElementById('opc-venta').hidden = true;
   pintarDias(); pintarHoras(); ir(1);
   confirmado.hidden = true; form.hidden = false;
@@ -162,7 +161,7 @@ document.getElementById('otra').addEventListener('click', () => {
 // archivo de calendario para el cliente
 document.getElementById('ics').addEventListener('click', () => {
   const d = datos(); const ini = new Date(diaSel); ini.setHours(horaSel, 0, 0, 0);
-  const horas = Number(form.querySelector('input[name="servicio"]:checked')?.dataset.horas || 2);
+  const horas = Math.max(...d.servicios.map(horasDe));
   const fin = new Date(ini.getTime() + horas * 3600e3);
   const f = x => x.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LEGO Motors//Agenda//ES', 'BEGIN:VEVENT',
@@ -186,4 +185,5 @@ addEventListener('agendar-moto', e => {
   if (!form.marca.value) { form.marca.value = 'Otra'; form.modelo.value = 'Vengo a ver una moto en venta'; }
   ir(3);
   document.getElementById('agenda').scrollIntoView({ behavior: 'smooth' });
+  // al llegar desde el catálogo se puede sumar otro servicio en el paso 2
 });

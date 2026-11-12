@@ -169,22 +169,20 @@
           <label class="campo"><span>Modelo</span><input name="modelo" placeholder="R 1200 GS" autocomplete="off" required></label>
           <label class="campo campo--corto"><span>Año</span><input name="anio" inputmode="numeric" placeholder="2016" maxlength="4"></label>
           <label class="campo"><span>Kilometraje actual</span><input name="km" inputmode="numeric" placeholder="38.500" data-miles></label>
-          <label class="campo"><span>Km de la última revisión <small>(si lo sabes)</small></span><input name="kmUltima" inputmode="numeric" placeholder="30.000" data-miles></label>
         </div>
-        <p class="agenda__toca" id="toca" hidden></p>
       </fieldset>
 
       <!-- Paso 2 -->
       <fieldset class="paso" data-paso="2" hidden>
-        <legend>¿Qué le hacemos a tu moto?</legend>
+        <legend>¿Qué le hacemos a tu moto? <small class="paso__ayuda">Puedes elegir varios</small></legend>
         <div class="opciones" id="servicios-opc">
-          <label class="opcion"><input type="radio" name="servicio" value="Revisión por kilometraje" data-horas="3"><span><b>Revisión por kilometraje</b><small>3 h aprox.</small></span></label>
-          <label class="opcion"><input type="radio" name="servicio" value="Cambio de aceite" data-horas="1"><span><b>Cambio de aceite</b><small>1 h aprox. · puedes esperarla</small></span></label>
-          <label class="opcion"><input type="radio" name="servicio" value="Diagnóstico con scanner" data-horas="1"><span><b>Diagnóstico con scanner</b><small>1 h aprox.</small></span></label>
-          <label class="opcion"><input type="radio" name="servicio" value="Mecánica y reparación" data-horas="4"><span><b>Mecánica y reparación</b><small>Te damos el tiempo tras revisarla</small></span></label>
-          <label class="opcion"><input type="radio" name="servicio" value="Suspensión y frenos" data-horas="2"><span><b>Suspensión y frenos</b><small>2 h aprox.</small></span></label>
-          <label class="opcion"><input type="radio" name="servicio" value="Revisión de viaje" data-horas="2"><span><b>Revisión de viaje</b><small>2 h aprox.</small></span></label>
-          <label class="opcion" id="opc-venta" hidden><input type="radio" name="servicio" value="Ver moto en venta" data-horas="1"><span><b>Ver una moto en venta</b><small id="opc-venta-moto"></small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Revisión por kilometraje"><span><b>Revisión por kilometraje</b><small>La que pide el manual, con su lista de chequeo</small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Cambio de aceite"><span><b>Cambio de aceite</b><small>Aceite y filtros con la especificación de tu motor</small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Diagnóstico con scanner"><span><b>Diagnóstico con scanner</b><small>Lectura de la computadora y luces del tablero</small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Mecánica y reparación"><span><b>Mecánica y reparación</b><small>Motor, embrague, válvulas y caja</small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Suspensión y frenos"><span><b>Suspensión y frenos</b><small>Retenedores, pastillas, discos y líquido</small></span></label>
+          <label class="opcion"><input type="checkbox" name="servicio" value="Revisión de viaje"><span><b>Revisión de viaje</b><small>Todo listo antes de salir a carretera</small></span></label>
+          <label class="opcion" id="opc-venta" hidden><input type="checkbox" name="servicio" value="Ver moto en venta"><span><b>Ver una moto en venta</b><small id="opc-venta-moto"></small></span></label>
         </div>
         <label class="campo campo--ancho"><span>¿Algo que debamos saber? <small>(ruidos, luces en el tablero…)</small></span><textarea name="nota" rows="2" placeholder="Suena un golpeteo al pasar por baches"></textarea></label>
       </fieldset>

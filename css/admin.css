@@ -151,3 +151,13 @@
   .cal-mes__pild { display: none; }
   .cal-mes__dia[data-n]::after { content: attr(data-n); font-size: 11px; color: var(--naranja-claro); }
 }
+
+/* servicios de la cita: varios a la vez */
+.ad-servicios { display: flex; flex-wrap: wrap; gap: 6px; }
+.ad-servicio { position: relative; cursor: pointer; }
+.ad-servicio input { position: absolute; opacity: 0; }
+.ad-servicio span { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--linea); color: var(--tenue); font: 600 13px var(--display); }
+.ad-servicio span::before { content: ""; width: 9px; height: 9px; border-radius: 3px; background: var(--c); opacity: .5; }
+.ad-servicio input:checked + span { border-color: var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--texto); }
+.ad-servicio input:checked + span::before { opacity: 1; }
+.ad-servicio input:focus-visible + span { outline: 2px solid var(--naranja-claro); outline-offset: 2px; }
