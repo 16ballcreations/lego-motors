@@ -1,10 +1,11 @@
-// Datos compartidos entre la web pública y el backoffice: motos en venta y citas del taller.
+// Datos compartidos entre la web pública y el backoffice: motos en venta, citas del taller y artículos del blog.
 // En la demo viven en el navegador (localStorage) para que el flujo se pueda probar completo:
 // lo que se agenda en la web aparece en el calendario del taller y lo que se carga en el backoffice
 // sale en el catálogo. En la versión final esto pasa a una base de datos (p. ej. Cloudflare D1).
 
 const CLAVE_MOTOS = 'lego.motos.v1';
 const CLAVE_CITAS = 'lego.citas.v1';
+const CLAVE_BLOG = 'lego.blog.v1';
 const memoria = {}; // por si el navegador no deja guardar (modo privado, almacenamiento bloqueado)
 
 function leer(clave) {
@@ -117,13 +118,35 @@ export function borrarCita(id) { return guardar(CLAVE_CITAS, listarCitas().filte
 export const turnoOcupado = (fecha, hora, sinId) => listarCitas().some(c => c.fecha === iso(fecha) && c.hora === hora && c.estado !== 'cancelada' && c.id !== sinId);
 export const nuevoId = p => `${p}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
 
+// ---------- blog ----------
+// Cada artículo es su texto Markdown completo ({ id, md, actualizado }); la ficha y el HTML salen de js/blog-md.js.
+// Los de ejemplo se leen de blog/articulos/ la primera vez.
+export async function listarArticulos() {
+  let a = leer(CLAVE_BLOG);
+  if (Array.isArray(a)) return a;
+  const base = new URL('../blog/articulos/', import.meta.url);
+  try {
+    const nombres = await (await fetch(new URL('index.json', base))).json();
+    a = await Promise.all(nombres.map(async n => ({ id: n.replace(/\.md$/, ''), md: await (await fetch(new URL(n, base))).text(), actualizado: null })));
+  } catch { a = []; }
+  guardar(CLAVE_BLOG, a);
+  return a;
+}
+export async function guardarArticulo(articulo) {
+  const lista = await listarArticulos();
+  const i = lista.findIndex(x => x.id === articulo.id);
+  if (i >= 0) lista[i] = articulo; else lista.unshift(articulo);
+  return guardar(CLAVE_BLOG, lista);
+}
+export async function borrarArticulo(id) { return guardar(CLAVE_BLOG, (await listarArticulos()).filter(x => x.id !== id)); }
+
 export function restablecer() {
-  try { localStorage.removeItem(CLAVE_MOTOS); localStorage.removeItem(CLAVE_CITAS); } catch {}
-  delete memoria[CLAVE_MOTOS]; delete memoria[CLAVE_CITAS];
+  try { for (const k of [CLAVE_MOTOS, CLAVE_CITAS, CLAVE_BLOG]) localStorage.removeItem(k); } catch {}
+  delete memoria[CLAVE_MOTOS]; delete memoria[CLAVE_CITAS]; delete memoria[CLAVE_BLOG];
 }
 // avisa cuando otra pestaña (la web o el backoffice) cambia los datos
 export function alCambiar(fn) {
-  addEventListener('storage', e => { if (e.key === CLAVE_MOTOS || e.key === CLAVE_CITAS || e.key === null) fn(); });
+  addEventListener('storage', e => { if ([CLAVE_MOTOS, CLAVE_CITAS, CLAVE_BLOG, null].includes(e.key)) fn(); });
 }
 
 // fotos: se reducen a WebP de 1200 px para que quepan en el navegador

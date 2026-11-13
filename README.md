@@ -19,11 +19,14 @@ a partir de sus publicaciones de Instagram.
 | 3 | Servicios | La foto de Luis como cara del taller y los seis servicios apilados |
 | 4 | Agenda | Cuatro pasos (moto, servicio, día y hora, datos), aviso de la próxima revisión por kilometraje, mensaje para WhatsApp y archivo de calendario |
 | 5 | Motos en venta | Catálogo con filtros, ficha de cada moto con lo que se le hizo en el taller y botón para agendar la visita |
+| 6 | Blog | Artículos que explican lo que sale en los videos de Instagram, con el reel embebido. Tarjetas en la portada y una página por artículo (`blog/articulo.html?a=…`) |
 | — | Siempre | Botón fijo «Agendar revisión» y botón «Siguiente» en cada sección |
 
 **Backoffice** (`admin.html`): agenda en calendario por semana y por mes (colores por servicio, estados de la cita,
-crear citas desde un hueco, WhatsApp al cliente) y motos en venta (cargar con foto, editar, publicada / reservada /
-vendida / borrador).
+crear citas desde un hueco, WhatsApp al cliente), motos en venta (cargar con foto, editar, publicada / reservada /
+vendida / borrador) y blog (editor Markdown con vista previa, subir uno o varios `.md`, publicar / borrador).
+Cada artículo es un solo `.md` con una ficha arriba; el formato, pensado para que lo use una persona o un agente,
+está en [blog/FORMATO.md](blog/FORMATO.md).
 
 > **Demo.** Las citas y las motos se guardan en el navegador de quien abre la página (`js/datos.js`), así el flujo
 > completo se puede probar sin servidor: lo que se agenda en la web aparece en el backoffice y lo que se carga en el
@@ -41,6 +44,9 @@ usan los vectores originales. Valores, tono y decisiones en [MARCA.md](MARCA.md)
 - `js/motor3d.js`: escena 3D (three.js): moto, anillos de neón, despiece, zoom por pieza y tornillería.
 - `js/datos.js`: datos compartidos (motos y citas). `js/agenda.js`, `js/catalogo.js`, `js/navegacion.js`: la web.
 - `js/admin.js`, `css/admin.css`: el backoffice.
+- `js/blog-md.js`: lee el Markdown de un artículo (ficha y cuerpo) y lo pasa a HTML (marked + DOMPurify). Lo usan
+  `js/blog.js` (tarjetas), `js/articulo.js` (página del artículo) y `js/admin-blog.js` (editor). Estilos en `css/blog.css`.
+- `blog/articulos/*.md` y su `index.json`: los artículos de ejemplo con que arranca la demo.
 - `media/3d/r1200gsa.glb`: la moto ya preparada (1,4 MB). `herramientas/preparar-r1200gsa.mjs` la genera desde el
   original: corrige las llantas, la pinta del naranja de la marca, pasa el asiento a grafito y la optimiza.
 - Para verla en local: `node herramientas/servir.mjs 4393`.

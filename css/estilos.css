@@ -361,3 +361,40 @@ main { position: relative; z-index: 1; }
   border-color: var(--naranja);
   background: var(--naranja) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 6.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
 }
+
+/* ---------- blog ---------- */
+.blog { background: var(--grafito); }
+.blog .bloque__texto a { color: var(--texto); text-decoration-color: var(--naranja); text-underline-offset: 3px; }
+.blog__lista { display: grid; gap: 18px; }
+.entrada {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); border-radius: 22px; overflow: hidden;
+  border: 1px solid var(--linea); background: var(--negro); text-decoration: none; transition: border-color .3s, transform .3s;
+}
+.entrada:hover { border-color: rgba(254,59,0,.55); transform: translateY(-3px); }
+.entrada__portada {
+  position: relative; min-height: 280px; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(120% 90% at 20% 100%, rgba(254,59,0,.35), transparent 60%), var(--grafito-2);
+}
+.entrada__cifra { position: relative; z-index: 1; display: flex; align-items: baseline; gap: .15em; font-size: clamp(48px, 7vw, 92px); font-weight: 900; font-style: italic; font-stretch: 125%; letter-spacing: -.03em; }
+.entrada__cifra small { font-size: .32em; color: var(--naranja); letter-spacing: .04em; }
+.entrada__bandera {
+  position: absolute; right: -10px; top: 22px; width: 150px; height: 44px; transform: skewX(-16deg); opacity: .9;
+  background: conic-gradient(var(--naranja) 25%, transparent 0 50%, var(--naranja) 0 75%, transparent 0) 0 0 / 22px 22px;
+}
+.entrada__cuerpo { display: flex; flex-direction: column; gap: 12px; padding: clamp(24px, 3.4vw, 44px); }
+.entrada__cuerpo h3 { font-size: clamp(22px, 2.4vw, 32px); font-stretch: 106%; line-height: 1.08; }
+.entrada__cuerpo > p:not(.entrada__meta) { margin: 0; color: var(--tenue); }
+.entrada__meta { margin: 0; font-size: 12.5px; color: var(--tenue); letter-spacing: .04em; }
+.entrada__meta span { color: var(--naranja); font-weight: 600; text-transform: uppercase; letter-spacing: .16em; }
+.entrada .enlace-flecha { align-self: flex-start; margin-top: auto; }
+@media (max-width: 760px) {
+  .entrada { grid-template-columns: 1fr; }
+  .entrada__portada { min-height: 190px; }
+}
+.entrada__palabra { font-size: .55em; letter-spacing: -.01em; text-align: center; padding: 0 20px; }
+/* desde el segundo artículo, las tarjetas van de a dos y más bajitas */
+.blog__lista { grid-template-columns: 1fr 1fr; }
+.blog__lista .entrada:first-child { grid-column: 1 / -1; }
+.blog__lista .entrada:not(:first-child) { grid-template-columns: 1fr; }
+.blog__lista .entrada:not(:first-child) .entrada__portada { min-height: 170px; }
+@media (max-width: 760px) { .blog__lista { grid-template-columns: 1fr; } }

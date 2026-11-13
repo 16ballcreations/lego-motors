@@ -1,8 +1,9 @@
-// Backoffice del taller: agenda en calendario (semana y mes) y motos en venta.
+// Backoffice del taller: agenda en calendario (semana y mes), motos en venta y blog (este último en admin-blog.js).
 import {
   listarCitas, guardarCita, borrarCita, listarMotos, guardarMoto, borrarMoto, restablecer, alCambiar,
   ESTADOS_CITA, ESTADOS_MOTO, SERVICIOS, HORAS_TALLER, horasDe, iso, deIso, lunesDe, nuevoId, turnoOcupado, prepararFoto,
 } from './datos.js';
+import { iniciarBlog } from './admin-blog.js';
 
 const $ = id => document.getElementById(id);
 const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -16,12 +17,12 @@ function avisar(texto) {
 }
 
 // ---------- pestañas ----------
+const VISTAS = { agenda: 'Agenda', motos: 'Motos en venta', blog: 'Blog' };
 function mostrarVista() {
-  const vista = location.hash === '#motos' ? 'motos' : 'agenda';
-  $('vista-agenda').hidden = vista !== 'agenda';
-  $('vista-motos').hidden = vista !== 'motos';
+  const vista = location.hash.slice(1) in VISTAS ? location.hash.slice(1) : 'agenda';
+  for (const v in VISTAS) $('vista-' + v).hidden = v !== vista;
   document.querySelectorAll('[data-vista]').forEach(a => { if (a.dataset.vista !== vista) a.removeAttribute('aria-current'); else a.setAttribute('aria-current', 'page'); });
-  document.title = (vista === 'motos' ? 'Motos en venta' : 'Agenda') + ' · Taller LEGO Motors';
+  document.title = VISTAS[vista] + ' · Taller LEGO Motors';
 }
 addEventListener('hashchange', mostrarVista);
 
@@ -331,11 +332,12 @@ $('pm-borrar').addEventListener('click', () => {
 document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
 document.querySelectorAll('.ad-panel').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
 $('restablecer').addEventListener('click', () => {
-  if (!confirm('¿Volver a los datos de ejemplo? Se pierden las citas y motos que hayas creado en esta demo.')) return;
-  restablecer(); ancla = hoy(); pintarAgenda(); pintarMotos(); avisar('Datos de ejemplo restablecidos');
+  if (!confirm('¿Volver a los datos de ejemplo? Se pierden las citas, motos y artículos que hayas creado en esta demo.')) return;
+  restablecer(); ancla = hoy(); pintarAgenda(); pintarMotos(); pintarArticulos(); avisar('Datos de ejemplo restablecidos');
 });
-alCambiar(() => { pintarAgenda(); pintarMotos(); }); // una cita nueva desde la web aparece sola
+alCambiar(() => { pintarAgenda(); pintarMotos(); pintarArticulos(); }); // una cita nueva desde la web aparece sola
 
+const pintarArticulos = iniciarBlog({ avisar });
 mostrarVista();
 pintarAgenda();
 pintarMotos();

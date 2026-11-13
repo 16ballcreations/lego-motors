@@ -54,6 +54,7 @@
     <a href="#despiece">La moto</a>
     <a href="#servicios">Servicios</a>
     <a href="#motos">Motos en venta</a>
+    <a href="#blog">Blog</a>
   </nav>
   <a class="boton boton--chico" href="#agenda">Agendar revisión</a>
 </header>
@@ -260,6 +261,18 @@
     <p class="agenda__nota">Demo: motos, precios y kilometrajes de ejemplo. Fotos de Wikimedia Commons (créditos al pie).</p>
   </section>
 
+  <!-- 6 · Blog: lo que sale en los videos de Instagram, explicado -->
+  <section class="blog bloque" id="blog" data-corto="Blog" aria-labelledby="blog-titulo">
+    <div class="bloque__cabeza">
+      <p class="sobre">Blog del taller</p>
+      <h2 id="blog-titulo">Lo que ves en los videos,<br><em>explicado con calma.</em></h2>
+      <p class="bloque__texto">Cada cosa que mostramos en <a href="https://www.instagram.com/legomotorsmed/" target="_blank" rel="noopener">@legomotorsmed</a> la contamos aquí con más detalle: qué es, cada cuánto se hace y qué señales debes mirar en tu moto.</p>
+    </div>
+    <div class="blog__lista" id="blog-lista">
+      <!-- tarjetas de los artículos publicados: las llena blog.js desde el backoffice -->
+    </div>
+  </section>
+
 </main>
 
 <dialog class="ficha-moto" id="ficha-moto" aria-labelledby="fm-titulo">
@@ -308,6 +321,7 @@
 <script type="module" src="js/motor3d.js"></script>
 <script type="module" src="js/agenda.js"></script>
 <script type="module" src="js/catalogo.js"></script>
+<script type="module" src="js/blog.js"></script>
 <script type="module" src="js/navegacion.js"></script>
 </body>
 </html>

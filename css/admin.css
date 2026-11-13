@@ -161,3 +161,57 @@
 .ad-servicio input:checked + span { border-color: var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--texto); }
 .ad-servicio input:checked + span::before { opacity: 1; }
 .ad-servicio input:focus-visible + span { outline: 2px solid var(--naranja-claro); outline-offset: 2px; }
+
+/* ---------- blog ---------- */
+.ad-cabeza__botones { display: flex; gap: 10px; flex-wrap: wrap; }
+.ad-subir { cursor: pointer; }
+.ad-ayuda { max-width: 760px; margin: 0 0 18px; font-size: 14px; color: var(--tenue); }
+.ad-ayuda a { color: var(--texto); }
+.ad-ayuda code, .ad-editor code { padding: 1px 6px; border-radius: 5px; background: var(--grafito-2); font-size: .92em; }
+#vista-blog { position: relative; }
+.ad-articulos { display: grid; gap: 10px; }
+.ad-articulo { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto auto; align-items: center; gap: 18px; padding: 10px 16px 10px 10px; border: 1px solid var(--linea); border-radius: 14px; background: var(--grafito); }
+.ad-articulo:hover { border-color: rgba(254,59,0,.4); }
+.ad-articulo__cifra { display: grid; place-items: center; height: 72px; padding: 0 8px; border-radius: 9px; background: radial-gradient(120% 90% at 20% 100%, rgba(254,59,0,.35), transparent 60%), var(--grafito-2); font-weight: 900; font-style: italic; font-stretch: 120%; font-size: 15px; text-align: center; line-height: 1.1; }
+.ad-articulo h3 { font-size: 16px; margin-bottom: 4px; }
+.ad-articulo p { margin: 0; font-size: 13px; color: var(--tenue); }
+.ad-articulo.borrador .ad-articulo__cifra { filter: grayscale(1); opacity: .6; }
+.ad-soltar { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; border: 2px dashed var(--naranja); border-radius: 18px; background: rgba(10,10,11,.88); font-size: 20px; }
+.ad-soltar p { pointer-events: none; }
+.ad-soltar[hidden] { display: none; }
+
+/* editor: casi pantalla completa, texto y vista previa lado a lado */
+.ad-editor { width: min(1500px, calc(100% - 32px)); height: calc(100% - 32px); max-height: none; padding: 0; border: 1px solid var(--linea); border-radius: 18px; background: var(--grafito); color: var(--texto); overflow: hidden; }
+.ad-editor::backdrop { background: rgba(0,0,0,.65); }
+.ad-editor__marco { display: flex; flex-direction: column; height: 100%; }
+.ad-editor .ad-panel__cabeza { gap: 16px; }
+.ad-editor .ad-panel__cabeza h2 { margin-right: auto; }
+.ad-editor__modo { display: none; }
+.ad-editor__cuerpo { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ad-editor__texto { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--linea); }
+.ad-editor__barra { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 14px; border-bottom: 1px solid var(--linea); }
+.ad-editor__barra button { min-height: 32px; padding: 0 11px; border-radius: 8px; border: 1px solid transparent; background: none; color: var(--tenue); font: 600 13px var(--display); cursor: pointer; }
+.ad-editor__barra button:hover { border-color: var(--linea); color: var(--texto); background: var(--grafito-2); }
+#ed-md { flex: 1; min-height: 0; width: 100%; padding: 18px 22px 40px; border: 0; resize: none; background: var(--negro); color: var(--texto); font: 14.5px/1.7 ui-monospace, "SF Mono", Menlo, Consolas, monospace; tab-size: 2; }
+#ed-md:focus { outline: none; }
+.ad-editor__vista { min-height: 0; overflow-y: auto; background: var(--negro); }
+.articulo--vista { padding: 34px clamp(20px, 3vw, 44px) 60px; }
+.articulo--vista .articulo__cabeza h1 { font-size: clamp(28px, 2.8vw, 42px); }
+.articulo--vista .articulo__cierre a { pointer-events: none; }
+.ad-editor__faltas { flex: 1; margin: 0; font-size: 13px; color: #ffb38a; align-self: center; }
+.ad-editor__faltas.bien { color: #7fdc9f; }
+.ad-editor .ad-panel__pie { align-items: center; flex-wrap: wrap; }
+.ad-editor .ad-panel__pie .ad-peligro { margin-right: 0; }
+
+@media (max-width: 900px) {
+  .ad-articulo { grid-template-columns: 84px minmax(0, 1fr) auto; }
+  .ad-articulo__cifra { height: 60px; font-size: 12px; }
+  .ad-articulo .ad-moto__acciones { grid-column: 2 / -1; }
+  .ad-editor { width: 100%; height: 100%; border-radius: 0; }
+  .ad-editor__modo { display: inline-flex; }
+  .ad-editor__cuerpo { grid-template-columns: 1fr; }
+  .ad-editor__cuerpo[data-ver="texto"] .ad-editor__vista, .ad-editor__cuerpo[data-ver="vista"] .ad-editor__texto { display: none; }
+  .ad-editor__texto { border-right: 0; }
+  .ad-editor .ad-panel__cabeza { flex-wrap: wrap; }
+  .ad-editor__faltas { flex-basis: 100%; order: -1; }
+}

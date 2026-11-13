@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/blog.css">
 <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="admin">
@@ -36,6 +37,7 @@
   <nav class="ad-pestanas" aria-label="Secciones del backoffice">
     <a href="#agenda" data-vista="agenda">Agenda</a>
     <a href="#motos" data-vista="motos">Motos en venta</a>
+    <a href="#blog" data-vista="blog">Blog</a>
   </nav>
   <a class="ad-web" href="index.html" target="_blank" rel="noopener">Ver la web ↗</a>
 </header>
@@ -89,6 +91,22 @@
       <label class="ad-buscar"><span class="oculto">Buscar</span><input type="search" id="buscar-moto" placeholder="Buscar marca o modelo"></label>
     </div>
     <div class="ad-motos" id="lista-motos"></div>
+  </section>
+  <!-- ============ BLOG ============ -->
+  <section class="ad-vista" id="vista-blog" aria-labelledby="t-blog" hidden>
+    <div class="ad-cabeza">
+      <div>
+        <h1 id="t-blog">Blog</h1>
+        <p class="ad-resumen" id="resumen-blog"></p>
+      </div>
+      <div class="ad-cabeza__botones">
+        <label class="boton boton--fantasma ad-subir">Subir .md<input type="file" accept=".md,.markdown,text/markdown,text/plain" multiple id="subir-md" class="oculto"></label>
+        <button type="button" class="boton" id="nuevo-articulo">+ Nuevo artículo</button>
+      </div>
+    </div>
+    <p class="ad-ayuda">Cada artículo es un archivo Markdown: una ficha arriba (título, resumen, video…) y el texto abajo. Escríbelo aquí o arrastra uno o varios <code>.md</code> a esta página. <a href="blog/FORMATO.md" target="_blank" rel="noopener">Ver el formato</a></p>
+    <div class="ad-articulos" id="lista-articulos"></div>
+    <div class="ad-soltar" id="soltar-md" hidden><p>Suelta los <b>.md</b> para cargarlos</p></div>
   </section>
 </main>
 
@@ -162,6 +180,43 @@
     </div>
     <div class="ad-panel__pie">
       <button type="button" class="boton boton--fantasma ad-peligro" id="pm-borrar">Borrar</button>
+      <button type="submit" class="boton">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- editor de artículo: Markdown a la izquierda, cómo se ve a la derecha -->
+<dialog class="ad-editor" id="editor" aria-labelledby="ed-titulo">
+  <form method="dialog" class="ad-editor__marco" id="form-articulo" novalidate>
+    <div class="ad-panel__cabeza">
+      <h2 id="ed-titulo">Artículo</h2>
+      <div class="ad-estados" id="ed-estados" role="radiogroup" aria-label="Estado del artículo"></div>
+      <div class="ad-segmento ad-editor__modo" role="group" aria-label="Qué mostrar">
+        <button type="button" data-ver="texto" class="activo">Texto</button>
+        <button type="button" data-ver="vista">Vista previa</button>
+      </div>
+      <button type="button" class="ad-icono" id="ed-cerrar" aria-label="Cerrar">×</button>
+    </div>
+    <div class="ad-editor__cuerpo" data-ver="texto">
+      <div class="ad-editor__texto">
+        <div class="ad-editor__barra" role="toolbar" aria-label="Formato">
+          <button type="button" data-md="h2" title="Subtítulo">Subtítulo</button>
+          <button type="button" data-md="b" title="Negrita (Ctrl+B)"><b>N</b></button>
+          <button type="button" data-md="i" title="Cursiva (Ctrl+I)"><i>C</i></button>
+          <button type="button" data-md="ul" title="Lista">• Lista</button>
+          <button type="button" data-md="check" title="Lista de chequeo: cada punto empieza en negrita">✓ Chequeo</button>
+          <button type="button" data-md="nota" title="Nota destacada del taller">Nota</button>
+          <button type="button" data-md="a" title="Enlace">Enlace</button>
+        </div>
+        <textarea id="ed-md" spellcheck="true" aria-label="Texto del artículo en Markdown"></textarea>
+      </div>
+      <div class="ad-editor__vista"><article class="articulo articulo--vista" id="ed-vista"></article></div>
+    </div>
+    <div class="ad-panel__pie">
+      <button type="button" class="boton boton--fantasma ad-peligro" id="ed-borrar">Borrar</button>
+      <p class="ad-editor__faltas" id="ed-faltas" role="alert"></p>
+      <button type="button" class="boton boton--fantasma" id="ed-descargar">Descargar .md</button>
+      <a class="boton boton--fantasma" id="ed-ver" target="_blank" rel="noopener">Ver en la web ↗</a>
       <button type="submit" class="boton">Guardar</button>
     </div>
   </form>
